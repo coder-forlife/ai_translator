@@ -1,0 +1,522 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap');
+
+/* ── Variables ─────────────────────────────────────── */
+:root {
+  --bg:      #04060f;
+  --bg2:     #080c1a;
+  --bg3:     #0c1226;
+  --c1: #ff2d78;
+  --c2: #ff6b00;
+  --c3: #ffe000;
+  --c4: #00ffb3;
+  --c5: #00c8ff;
+  --c6: #b400ff;
+  --text:    #d0e8ff;
+  --dim:     #3a5070;
+  --mute:    #141e30;
+  --radius:  16px;
+}
+
+/* ── Reset ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Exo 2', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px 80px;
+  overflow-x: hidden;
+}
+
+/* ── Animated Background ───────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: -2;
+  background:
+    radial-gradient(ellipse at 10% 20%, rgba(180,0,255,.10) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 10%, rgba(255,45,120,.09) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 90%, rgba(0,200,255,.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 50%, rgba(0,255,179,.06) 0%, transparent 45%);
+  animation: bgShift 12s ease-in-out infinite alternate;
+}
+@keyframes bgShift {
+  0%   { filter: hue-rotate(0deg);   }
+  100% { filter: hue-rotate(40deg);  }
+}
+
+/* Grid overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: -1;
+  background-image:
+    linear-gradient(rgba(0,200,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,200,255,.025) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridDrift 20s linear infinite;
+}
+@keyframes gridDrift {
+  from { background-position: 0 0; }
+  to   { background-position: 50px 50px; }
+}
+
+/* ── Page Header ───────────────────────────────────── */
+.page-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(1.6rem, 5vw, 2.8rem);
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, var(--c5), var(--c4), var(--c6), var(--c1), var(--c5));
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleShimmer 5s linear infinite;
+  filter: drop-shadow(0 0 20px rgba(0,200,255,.4));
+}
+@keyframes titleShimmer {
+  to { background-position: 300% center; }
+}
+
+.page-sub {
+  text-align: center;
+  color: var(--dim);
+  font-size: .8rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* ── Main Container ────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 780px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ── CARD ──────────────────────────────────────────── */
+.card {
+  position: relative;
+  border-radius: 20px;
+  padding: 2px;
+  background: linear-gradient(
+    var(--card-angle, 135deg),
+    var(--c5), var(--c6), var(--c1), var(--c2), var(--c4), var(--c5)
+  );
+  background-size: 400% 400%;
+  animation: cardBorderFlow 6s linear infinite;
+  box-shadow:
+    0 0 40px rgba(0,200,255,.12),
+    0 20px 60px rgba(0,0,0,.5);
+}
+
+@keyframes cardBorderFlow {
+  0%   { background-position: 0% 50%;   }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%;   }
+}
+
+.card-inner {
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+  border-radius: 18px;
+  padding: 32px 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Scan line sweep inside card */
+.card-inner::before {
+  content: '';
+  position: absolute;
+  top: -100%; left: 0; right: 0;
+  height: 200%;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(0,200,255,.025) 50%,
+    transparent 60%
+  );
+  animation: scanLine 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes scanLine {
+  0%   { transform: translateY(-20%); }
+  100% { transform: translateY(60%); }
+}
+
+/* Card number badge */
+.card-num {
+  position: absolute;
+  top: 20px; right: 24px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .65rem;
+  color: var(--dim);
+  letter-spacing: .2em;
+}
+
+/* ── Card Title ────────────────────────────────────── */
+.card-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--c5);
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-title::before {
+  content: '';
+  display: block;
+  width: 28px; height: 2px;
+  background: linear-gradient(90deg, var(--c5), var(--c6));
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--c5);
+}
+.card-title::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, rgba(0,200,255,.2), transparent);
+}
+
+/* ── File Upload ───────────────────────────────────── */
+.upload-zone {
+  position: relative;
+  border-radius: 14px;
+  padding: 1.5px;
+  background: linear-gradient(135deg,
+    rgba(0,200,255,.4), rgba(180,0,255,.4),
+    rgba(255,45,120,.3), rgba(0,255,179,.3));
+  background-size: 300% 300%;
+  animation: uploadBorder 4s ease infinite;
+  margin-bottom: 22px;
+}
+@keyframes uploadBorder {
+  0%,100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+.upload-zone input[type="file"] {
+  width: 100%;
+  padding: 18px 20px;
+  background: rgba(4,10,28,.9);
+  border: none;
+  border-radius: 13px;
+  color: var(--c5);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .85rem;
+  cursor: pointer;
+  outline: none;
+}
+.upload-zone input[type="file"]::file-selector-button {
+  padding: 8px 18px;
+  background: linear-gradient(135deg, var(--c6), var(--c5));
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: .8rem;
+  letter-spacing: .05em;
+  cursor: pointer;
+  margin-right: 14px;
+  transition: filter .2s;
+}
+.upload-zone input[type="file"]::file-selector-button:hover {
+  filter: brightness(1.3);
+}
+
+/* ── Buttons ───────────────────────────────────────── */
+button[type="submit"],
+.btn {
+  position: relative;
+  padding: 14px 36px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  font-size: .9rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  outline: none;
+  overflow: hidden;
+  z-index: 0;
+  transition: transform .15s, filter .2s;
+}
+
+/* Aurora gradient bg on button */
+button[type="submit"]::before,
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 52px;
+  background: linear-gradient(90deg,
+    var(--c1), var(--c6), var(--c5), var(--c4), var(--c2), var(--c1));
+  background-size: 400% auto;
+  z-index: -2;
+  animation: btnAurora 4s linear infinite;
+}
+@keyframes btnAurora {
+  to { background-position: 400% center; }
+}
+
+/* Dark inner layer */
+button[type="submit"]::after,
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 48px;
+  background: linear-gradient(135deg, #090b1a, #0f1530);
+  z-index: -1;
+  transition: background .2s;
+}
+
+/* Shine sweep */
+button[type="submit"] .shine,
+.btn .shine {
+  position: absolute;
+  inset: 0; border-radius: 50px;
+  background: linear-gradient(105deg,
+    transparent 30%, rgba(255,255,255,.08) 50%, transparent 70%);
+  background-size: 200% auto;
+  animation: btnShine 2.5s linear infinite;
+  z-index: 1;
+}
+@keyframes btnShine {
+  from { background-position: -100% center; }
+  to   { background-position: 300% center; }
+}
+
+button[type="submit"]:hover { transform: translateY(-3px); filter: brightness(1.25); }
+button[type="submit"]:active { transform: translateY(1px); filter: brightness(.9); }
+
+/* Glow pulse below button */
+.btn-wrap {
+  position: relative;
+  display: inline-block;
+}
+.btn-wrap::after {
+  content: '';
+  position: absolute;
+  left: 10%; right: 10%; bottom: -8px;
+  height: 16px;
+  background: linear-gradient(90deg, var(--c6), var(--c5), var(--c4));
+  filter: blur(12px);
+  opacity: .5;
+  border-radius: 50%;
+  animation: btnGlow 2s ease-in-out infinite alternate;
+}
+@keyframes btnGlow {
+  from { opacity: .3; filter: blur(10px); }
+  to   { opacity: .7; filter: blur(18px); }
+}
+
+/* ── Select ────────────────────────────────────────── */
+.select-wrap {
+  position: relative;
+  border-radius: 12px;
+  padding: 1.5px;
+  background: linear-gradient(90deg,
+    var(--c5), var(--c6), var(--c1), var(--c4), var(--c5));
+  background-size: 300% auto;
+  animation: selectBorder 5s linear infinite;
+  display: inline-block;
+}
+@keyframes selectBorder {
+  to { background-position: 300% center; }
+}
+.select-wrap select {
+  appearance: none;
+  padding: 12px 42px 12px 18px;
+  background: var(--bg2);
+  border: none;
+  border-radius: 11px;
+  color: var(--c5);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .85rem;
+  letter-spacing: .05em;
+  outline: none;
+  cursor: pointer;
+  min-width: 180px;
+}
+.select-wrap select option {
+  background: var(--bg2);
+  color: var(--text);
+}
+.select-arrow {
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--c5);
+  pointer-events: none;
+  font-size: .75rem;
+}
+
+/* ── Textarea (result display) ─────────────────────── */
+.result-box-wrap {
+  position: relative;
+  border-radius: 14px;
+  padding: 1.5px;
+  margin-top: 20px;
+  background: linear-gradient(135deg,
+    rgba(0,200,255,.5), rgba(0,255,179,.4),
+    rgba(180,0,255,.3));
+  background-size: 200% 200%;
+  animation: resultBorder 3s ease-in-out infinite alternate;
+}
+@keyframes resultBorder {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+.result-box-wrap textarea {
+  width: 100%;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(4,6,20,.95), rgba(8,12,30,.95));
+  border: none;
+  border-radius: 13px;
+  color: var(--c4);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .88rem;
+  line-height: 1.7;
+  resize: vertical;
+  min-height: 90px;
+  outline: none;
+  letter-spacing: .02em;
+}
+
+/* ── Result Label ──────────────────────────────────── */
+.result-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--c4);
+  margin-bottom: 8px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.result-label::before {
+  content: '▸';
+  color: var(--c4);
+  font-size: .8rem;
+}
+
+/* ── Audio Player ──────────────────────────────────── */
+.audio-wrap {
+  position: relative;
+  border-radius: 14px;
+  padding: 1.5px;
+  margin-top: 20px;
+  background: linear-gradient(90deg,
+    var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6), var(--c1));
+  background-size: 400% auto;
+  animation: audioBorder 4s linear infinite;
+  box-shadow: 0 0 30px rgba(0,200,255,.2);
+}
+@keyframes audioBorder {
+  to { background-position: 400% center; }
+}
+.audio-wrap audio {
+  width: 100%;
+  border-radius: 13px;
+  background: var(--bg2);
+  display: block;
+}
+audio::-webkit-media-controls-panel {
+  background: linear-gradient(135deg, #080c1a, #0c1226);
+}
+
+/* ── Controls Row ──────────────────────────────────── */
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* ── Step Indicator ────────────────────────────────── */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 36px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .7rem;
+  letter-spacing: .15em;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--dim);
+}
+.step.active { color: var(--c5); }
+.step-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem;
+  transition: .3s;
+}
+.step.active .step-num {
+  border-color: var(--c5);
+  background: rgba(0,200,255,.1);
+  box-shadow: 0 0 14px rgba(0,200,255,.4);
+  color: var(--c5);
+}
+.step-line {
+  width: 48px; height: 1px;
+  background: linear-gradient(90deg, var(--dim), transparent);
+}
+
+/* ── Floating orbs ─────────────────────────────────── */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: .12;
+  pointer-events: none;
+  z-index: -1;
+  animation: orbFloat 15s ease-in-out infinite;
+}
+.orb-1 { width:400px;height:400px;background:var(--c6);top:-100px;left:-100px;animation-duration:18s; }
+.orb-2 { width:350px;height:350px;background:var(--c1);top:30%;right:-80px;animation-duration:13s;animation-delay:-5s; }
+.orb-3 { width:300px;height:300px;background:var(--c5);bottom:-50px;left:35%;animation-duration:20s;animation-delay:-10s; }
+@keyframes orbFloat {
+  0%,100% { transform:translate(0,0) scale(1); }
+  33%      { transform:translate(20px,-30px) scale(1.05); }
+  66%      { transform:translate(-15px,20px) scale(.95); }
+}
+
+/* ── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--c6), var(--c5));
+  border-radius: 4px;
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 600px) {
+  .card-inner { padding: 22px 18px; }
+  .controls-row { flex-direction: column; align-items: flex-start; }
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>VoiceAI Studio</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+  <!-- Floating orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Header -->
+  <div class="page-title">VoiceAI Studio</div>
+  <div class="page-sub">◈ &nbsp; Transcribe · Translate · Synthesize &nbsp; ◈</div>
+
+  <!-- Step indicators -->
+  <div class="step-indicator">
+    <div class="step active">
+      <div class="step-num">01</div>
+      <span>Transcribe</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step {% if translated_text %}active{% endif %}">
+      <div class="step-num">02</div>
+      <span>Translate</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step {% if audio_file %}active{% endif %}">
+      <div class="step-num">03</div>
+      <span>Synthesize</span>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ── CARD 1: Transcribe ── -->
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-num">STEP 01</div>
+        <div class="card-title">Audio Transcription</div>
+
+        <form action="/audio_to_text" method="post" enctype="multipart/form-data">
+
+          <div class="upload-zone">
+            <input type="file" name="audio_file" id="audio_id" accept="audio/*" required>
+          </div>
+
+          <div class="btn-wrap">
+            <button type="submit">
+              <span class="shine"></span>
+              ⬡ &nbsp; Transcribe Audio
+            </button>
+          </div>
+
+          {% if transcript_text %}
+          <div class="result-label">Transcription Result</div>
+          <div class="result-box-wrap">
+            <textarea readonly rows="5">{{ transcript_text }}</textarea>
+          </div>
+          {% endif %}
+
+        </form>
+      </div>
+    </div>
+
+    <!-- ── CARD 2: Translate ── -->
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-num">STEP 02</div>
+        <div class="card-title">Language Translation</div>
+
+        <form action="/translate" method="post">
+          <textarea name="transcript_text" hidden>{{ transcript_text }}</textarea>
+
+          <div class="controls-row">
+            <div class="select-wrap">
+              <select name="language" id="language-select">
+                <option value="hi"  {% if language == 'hi' %}selected{% endif %}>🇮🇳 Hindi</option>
+                <option value="es"  {% if language == 'es' %}selected{% endif %}>🇪🇸 Spanish</option>
+                <option value="de"  {% if language == 'de' %}selected{% endif %}>🇩🇪 German</option>
+                <option value="fr"  {% if language == 'fr' %}selected{% endif %}>🇫🇷 French</option>
+                <option value="ja"  {% if language == 'ja' %}selected{% endif %}>🇯🇵 Japanese</option>
+                <option value="zh"  {% if language == 'zh' %}selected{% endif %}>🇨🇳 Chinese</option>
+              </select>
+              <span class="select-arrow">▾</span>
+            </div>
+
+            <div class="btn-wrap">
+              <button type="submit">
+                <span class="shine"></span>
+                ◈ &nbsp; Translate
+              </button>
+            </div>
+          </div>
+
+          {% if translated_text %}
+          <div class="result-label">Translation Result</div>
+          <div class="result-box-wrap">
+            <textarea readonly rows="5">{{ translated_text }}</textarea>
+          </div>
+          {% endif %}
+
+        </form>
+      </div>
+    </div>
+
+    <!-- ── CARD 3: Audio Generate ── -->
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-num">STEP 03</div>
+        <div class="card-title">Voice Synthesis</div>
+
+        <form action="/audio_generate" method="post">
+          <textarea name="transcript_text" hidden>{{ transcript_text }}</textarea>
+          <textarea name="translated_text" hidden>{{ translated_text }}</textarea>
+
+          <div class="controls-row">
+            <div class="select-wrap">
+              <select name="agent" id="agent-name">
+                <option value="nova"    {% if selected_agent == 'nova'    %}selected{% endif %}>✦ Nova</option>
+                <option value="echo"    {% if selected_agent == 'echo'    %}selected{% endif %}>✦ Echo</option>
+                <option value="alloy"   {% if selected_agent == 'alloy'   %}selected{% endif %}>✦ Alloy</option>
+                <option value="onyx"    {% if selected_agent == 'onyx'    %}selected{% endif %}>✦ Onyx</option>
+                <option value="shimmer" {% if selected_agent == 'shimmer' %}selected{% endif %}>✦ Shimmer</option>
+                <option value="fable"   {% if selected_agent == 'fable'   %}selected{% endif %}>✦ Fable</option>
+                <option value="coral"   {% if selected_agent == 'coral'   %}selected{% endif %}>✦ Coral</option>
+              </select>
+              <span class="select-arrow">▾</span>
+            </div>
+
+            <div class="btn-wrap">
+              <button type="submit">
+                <span class="shine"></span>
+                ◎ &nbsp; Generate Audio
+              </button>
+            </div>
+          </div>
+
+          {% if audio_file %}
+          <div class="result-label">Generated Audio</div>
+          <div class="audio-wrap">
+            <audio controls>
+              <source src="{{ url_for('static', filename='audio/' + audio_file) }}"
+                      type="audio/mpeg">
+              Your browser does not support audio.
+            </audio>
+          </div>
+          {% endif %}
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
