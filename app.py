@@ -37,10 +37,11 @@ def audio_to_text_post():
             
     return render_template("index.html", transcript_text=transcription_text)
 
-
+target_language=""
 @app.route("/translate", methods=["POST"])
 def translate():
     if request.method == "POST":
+        global target_language
         text = request.form.get("transcript_text")    
         target_language = request.form.get("language")  
 
@@ -74,6 +75,7 @@ def translate():
 @app.route("/audio_generate", methods=["POST"])
 def generate_audio():
     if request.method == "POST":
+        global target_language
         transcripttxt = request.form.get("transcript_text")
         text          = request.form.get("translated_text")
         voice_name    = request.form.get("agent")
@@ -104,7 +106,8 @@ def generate_audio():
                            transcript_text=transcripttxt,
                            translated_text=text,
                            audio_file=filename,
-                           selected_agent=voice_name)  
+                           selected_agent=voice_name,
+                           language=target_language)  
 
 if __name__ == "__main__":
     app.run(debug=True)
